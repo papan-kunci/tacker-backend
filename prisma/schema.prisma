@@ -9,3 +9,51 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String  @id @default(cuid())
+  username  String
+  email     String
+  phone     String
+  firstName String?
+  lastName  String?
+  isAdmin   Boolean
+
+  Trash  Trash[]
+  Review Review[]
+}
+
+model Location {
+  id        String @id @default(cuid())
+  longitude Int
+  latitude  Int
+  address   String
+  district  String
+  city      String
+
+  trash   Trash  @relation(fields: [trashId], references: [id], onDelete: Cascade)
+  trashId String @unique
+}
+
+model Trash {
+  id   String @id @default(cuid())
+  name String
+  type String // "general" | "recycle" | "clothing" | "furniture"
+
+  location      Location? // one to one with Location
+  contributor   User      @relation(fields: [contributorId], references: [id], onDelete: Cascade)
+  contributorId String
+  Review        Review[]
+}
+
+model Review {
+  id      String   @id @default(cuid())
+  title   String
+  content String
+  like    Boolean? // like or dislike
+
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String
+  trash   Trash  @relation(fields: [trashId], references: [id])
+  trashId String
+}
