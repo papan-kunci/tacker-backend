@@ -1,25 +1,25 @@
 name: Node Continuous Integration
 
 on:
-    push: 
-        branches: [ main ]
-    pull_request:
-        branches: [ main ]
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
-jobs: 
-    build: 
-        runs-on: ubuntu-latest
-        steps: 
-            - uses: actions/checkout@v2
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-            - name: Clear yarn cache
-              run: yarn cache clean
+      - name: Clear yarn cache
+        run: yarn cache clean
 
-            - uses: actions/setup-node@v2
-              with:
-                node-version: 18
-                cache: 'yarn'
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 18
+          cache: 'yarn'
 
-            - run: yarn install --frozen-lockfile
-            - run: yarn test
-            - run: yarn run build
+      - run: yarn --frozen-lockfile
+      - run: yarn test
+      - run: yarn build
